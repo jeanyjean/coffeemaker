@@ -19,6 +19,7 @@
 package edu.ncsu.csc326.coffeemaker;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import edu.ncsu.csc326.coffeemaker.exceptions.RecipeException;
 /**
  * Unit tests for CoffeeMaker class.
  * 
- * @author Sarah Heckman
+ * @author Purich Trainorapong
  */
 public class CoffeeMakerTest {
 	
@@ -132,4 +133,229 @@ public class CoffeeMakerTest {
 		assertEquals(25, coffeeMaker.makeCoffee(0, 75));
 	}
 
+	/**
+	 * Test if coffee maker can add a recipe successfully.
+	 */
+	@Test
+	public void testAddOneRecipe() {
+		coffeeMaker.addRecipe(recipe1);
+	}
+
+	/**
+	 * Test if coffee maker won't be able to add more than three recipes.
+	 */
+	@Test
+	public void testAddRecipeMoreThanThree() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		coffeeMaker.addRecipe(recipe3);
+		boolean result = coffeeMaker.addRecipe(recipe4);
+		assertFalse(result);
+	}
+
+	/**
+	 * Test if coffee maker can add a recipe with a non integer price.
+	 */
+	@Test(expected = RecipeException.class)
+	public void testAddNewRecipeWithNonIntegerPrice() throws RecipeException {
+		Recipe recipe5 = new Recipe();
+		recipe5.setName("Test Drink");
+		recipe5.setAmtChocolate("5");
+		recipe5.setAmtCoffee("2");
+		recipe5.setAmtMilk("3");
+		recipe5.setAmtSugar("3");
+		recipe5.setPrice("wow");
+	}
+
+	/**
+	 * Test if coffee maker won't be able to add recipe with the same name
+	 */
+	@Test
+	public void testAddNewRecipeWithSameName() {
+		coffeeMaker.addRecipe(recipe1);
+		boolean result = coffeeMaker.addRecipe(recipe1);
+		assertFalse(result);
+	}
+
+	/**
+	 * Test if coffee maker can delete a recipe.
+	 */
+	@Test
+	public void testDeleteRecipe() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		String deletedRecipe = coffeeMaker.deleteRecipe(1);
+		Recipe[] recipesList = coffeeMaker.getRecipes();
+		assertNotEquals(deletedRecipe, recipesList[1].getName());
+	}
+
+	/**
+	 * Test that coffee maker won't be able to delete a recipe at index that is out of range.
+	 */
+	@Test
+	public void testDeleteRecipeOutOfRange() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		String deletedRecipe = coffeeMaker.deleteRecipe(5);
+		assertNull(deletedRecipe);
+	}
+
+	/**
+	 * Test that coffee maker won't be able to delete a recipe at index that is a negative number.
+	 */
+	@Test
+	public void testDeleteRecipeAtNegativeNumber() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		String deletedRecipe = coffeeMaker.deleteRecipe(-1);
+		assertNull(deletedRecipe);
+	}
+
+	/**
+	 * Test that recipe's name won't be change when editing a recipe.
+	 */
+	@Test
+	public void testEditRecipeNameMustNotChange() throws RecipeException {
+		coffeeMaker.addRecipe(recipe1);
+
+		Recipe newRecipe = new Recipe();
+		newRecipe.setName("Coffee");
+		newRecipe.setAmtChocolate("2");
+		newRecipe.setAmtCoffee("1");
+		newRecipe.setAmtMilk("2");
+		newRecipe.setAmtSugar("3");
+		newRecipe.setPrice("60");
+		Recipe[] recipesList = coffeeMaker.getRecipes();
+
+		assertEquals(recipe1.getName(), coffeeMaker.editRecipe(0, newRecipe));
+		assertEquals(recipe1.getName(), recipesList[0].getName());
+	}
+
+	/**
+	 * Test that coffee maker won't be able to edit a recipe at index that is out of range.
+	 */
+	@Test
+	public void testEditRecipeOutOfRange() throws RecipeException {
+		coffeeMaker.addRecipe(recipe1);
+
+		Recipe newRecipe = new Recipe();
+		newRecipe.setName("Coffee");
+		newRecipe.setAmtChocolate("2");
+		newRecipe.setAmtCoffee("1");
+		newRecipe.setAmtMilk("2");
+		newRecipe.setAmtSugar("3");
+		newRecipe.setPrice("60");
+
+		String edittedRecipe = coffeeMaker.editRecipe(5, newRecipe);
+		assertNull(edittedRecipe);
+	}
+
+	/**
+	 * Test that coffee maker won't be able to edit a recipe at index that is a negative number.
+	 */
+	@Test
+	public void testEditRecipeAtNegativeNumber() throws RecipeException {
+		coffeeMaker.addRecipe(recipe1);
+
+		Recipe newRecipe = new Recipe();
+		newRecipe.setName("Coffee");
+		newRecipe.setAmtChocolate("2");
+		newRecipe.setAmtCoffee("1");
+		newRecipe.setAmtMilk("2");
+		newRecipe.setAmtSugar("3");
+		newRecipe.setPrice("60");
+
+		String edittedRecipe = coffeeMaker.editRecipe(-1, newRecipe);
+		assertNull(edittedRecipe);
+	}
+
+	/**
+	 * Test if coffee maker can add to the inventory with a positive number.
+	 */
+	@Test
+	public void testAddInventoryPositiveNumber() throws InventoryException {
+		coffeeMaker.addInventory("0","7","10","9");
+		coffeeMaker.addInventory("4","0","10","9");
+		coffeeMaker.addInventory("4","7","0","9");
+		coffeeMaker.addInventory("4","7","10","0");
+	}
+
+	/**
+	 * Test if coffee maker can add to the inventory with a negative number.
+	 */
+	@Test(expected = InventoryException.class)
+	public void testAddInventoryNegativeNumber() throws InventoryException {
+		coffeeMaker.addInventory("-4","-7","-10","-9");
+		coffeeMaker.addInventory("-4","7","10","9");
+		coffeeMaker.addInventory("4","-7","10","9");
+		coffeeMaker.addInventory("4","7","-10","9");
+		coffeeMaker.addInventory("4","7","10","-9");
+	}
+
+	/**
+	 * Test if the inventory called from checkinventory() will be updated after addinventory() is called.
+	 */
+	@Test
+	public void testCheckInventory() throws InventoryException {
+		coffeeMaker.addInventory("4","7","0","9");
+		String inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 19\nMilk: 22\nSugar: 15\nChocolate: 24\n" ,inventory);
+	}
+
+	/**
+	 * Test the amount of money return from the purchase beverage method with enough money to buy a beverage.
+	 */
+	@Test
+	public void testPurchaseBeverageWithEnoughMoney() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		int change = coffeeMaker.makeCoffee(0,50);
+		assertEquals(0, change);
+	}
+
+	/**
+	 * Test the amount of money return from the purchase beverage method with more than enough money to buy a beverage.
+	 */
+	@Test
+	public void testPurchaseBeverageWithMoreThanEnoughMoney() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		int change = coffeeMaker.makeCoffee(0,70);
+		assertEquals(20, change);
+	}
+
+	/**
+	 * Test the amount of money return from the purchase beverage method with less than enough money to buy a beverage.
+	 */
+	@Test
+	public void testPurchaseBeverageWithNotEnoughMoney() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		int change = coffeeMaker.makeCoffee(0,30);
+		assertEquals(30, change);
+	}
+
+	/**
+	 * Test the inventory of the coffee maker after a successful purchase.
+	 */
+	@Test
+	public void testPurchaseBeverageInventoryWithEnoughMoney() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		int change = coffeeMaker.makeCoffee(0,50);
+		String inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 12\nMilk: 14\nSugar: 14\nChocolate: 15\n" ,inventory);
+	}
+
+	/**
+	 * Test the inventory of the coffee maker after an unsuccessful purchase.
+	 */
+	@Test
+	public void testPurchaseBeverageInventoryWithNotEnoughMoney() {
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMaker.addRecipe(recipe2);
+		int change = coffeeMaker.makeCoffee(0,30);
+		String inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 15\nMilk: 15\nSugar: 15\nChocolate: 15\n" ,inventory);
+	}
 }
