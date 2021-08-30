@@ -186,7 +186,7 @@ public class CoffeeMakerTest {
 		coffeeMaker.addRecipe(recipe2);
 		String deletedRecipe = coffeeMaker.deleteRecipe(1);
 		Recipe[] recipesList = coffeeMaker.getRecipes();
-		assertNotEquals(deletedRecipe, recipesList[1].getName());
+		assertNull(recipesList[1]);
 	}
 
 	/**
