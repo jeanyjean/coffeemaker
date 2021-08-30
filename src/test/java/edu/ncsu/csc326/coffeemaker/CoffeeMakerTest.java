@@ -297,9 +297,21 @@ public class CoffeeMakerTest {
 	 */
 	@Test
 	public void testCheckInventory() throws InventoryException {
-		coffeeMaker.addInventory("4","7","0","9");
+		coffeeMaker.addInventory("4","0","0","0");
 		String inventory = coffeeMaker.checkInventory();
-		assertEquals("Coffee: 19\nMilk: 22\nSugar: 15\nChocolate: 24\n" ,inventory);
+		assertEquals("Coffee: 19\nMilk: 15\nSugar: 15\nChocolate: 15\n" ,inventory);
+
+		coffeeMaker.addInventory("0","7","0","0");
+		inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 19\nMilk: 22\nSugar: 15\nChocolate: 15\n" ,inventory);
+
+		coffeeMaker.addInventory("0","0","3","0");
+		inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 19\nMilk: 22\nSugar: 18\nChocolate: 15\n" ,inventory);
+
+		coffeeMaker.addInventory("0","0","0","9");
+		inventory = coffeeMaker.checkInventory();
+		assertEquals("Coffee: 19\nMilk: 22\nSugar: 18\nChocolate: 24\n" ,inventory);
 	}
 
 	/**
