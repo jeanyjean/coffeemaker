@@ -393,7 +393,7 @@ public class CoffeeMakerTest {
     }
 
     /**
-     * Test the amount of money return from the purchase beverage method with the null Recipe
+     * Test the amount of money return from the purchase beverage method with the null Recipe.
      */
     @Test
     public void testPurchaseBeverageWithNullRecipe() {
@@ -404,7 +404,7 @@ public class CoffeeMakerTest {
     }
 
     /**
-     * Test the amount of money return from the purchase beverage method with not enough ingredients
+     * Test the amount of money return from the purchase beverage method with not enough ingredients.
      */
     @Test
     public void testPurchaseBeverageWithNotEnoughIngredient() {
