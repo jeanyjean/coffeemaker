@@ -391,4 +391,26 @@ public class CoffeeMakerTest {
         String inventory = coffeeMaker.checkInventory();
         assertEquals("Coffee: 15\nMilk: 15\nSugar: 15\nChocolate: 15\n", inventory);
     }
+
+    /**
+     * Test the amount of money return from the purchase beverage method with the null Recipe
+     */
+    @Test
+    public void testPurchaseBeverageWithNullRecipe() {
+        coffeeMaker.addRecipe(recipe1);
+        int change = coffeeMaker.makeCoffee(1, 30);
+        assertEquals(30, change);
+
+    }
+
+    /**
+     * Test the amount of money return from the purchase beverage method with not enough ingredients
+     */
+    @Test
+    public void testPurchaseBeverageWithNotEnoughIngredient() {
+        coffeeMaker.addRecipe(recipe1);
+        coffeeMaker.addRecipe(recipe2);
+        int change = coffeeMaker.makeCoffee(1, 80);
+        assertEquals(80, change);
+    }
 }
